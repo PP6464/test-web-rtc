@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:test_web_rtc/firebase_options.dart';
 import 'package:test_web_rtc/signalling.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  if (!kIsWeb) await [Permission.camera, Permission.microphone].request();
   runApp(const MyApp());
 }
 
@@ -75,6 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                 onPressed: () {
                   signalling.openUserMedia(_localRenderer, _remoteRenderer);
+                  setState(() {});
                 },
                 child: const Text("Open camera & microphone"),
               ),
@@ -99,6 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     textEditingController.text.trim(),
                     _remoteRenderer,
                   );
+                  setState(() {});
                 },
                 child: const Text("Join room"),
               ),
@@ -108,6 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                 onPressed: () {
                   signalling.hangUp(_localRenderer);
+                  setState(() {});
                 },
                 child: const Text("Hangup"),
               )
