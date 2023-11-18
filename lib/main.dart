@@ -49,8 +49,12 @@ class _MyHomePageState extends State<MyHomePage> {
     _remoteRenderer.initialize();
 
     signalling.onAddRemoteStream = ((stream) {
-      _remoteRenderer.srcObject = stream;
-      setState(() {});
+      print("Remote stream added");
+      print(stream.getTracks().length);
+      setState(() {
+        _remoteRenderer.srcObject = stream;
+        print(_remoteRenderer.srcObject?.getTracks().length);
+      });
     });
 
     super.initState();
@@ -72,52 +76,55 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         children: [
           const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  signalling.openUserMedia(_localRenderer, _remoteRenderer);
-                  setState(() {});
-                },
-                child: const Text("Open camera & microphone"),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  roomId = await signalling.createRoom(_remoteRenderer);
-                  textEditingController.text = roomId!;
-                  setState(() {});
-                },
-                child: const Text("Create room"),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Add roomId
-                  signalling.joinRoom(
-                    textEditingController.text.trim(),
-                    _remoteRenderer,
-                  );
-                  setState(() {});
-                },
-                child: const Text("Join room"),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  signalling.hangUp(_localRenderer);
-                  setState(() {});
-                },
-                child: const Text("Hangup"),
-              )
-            ],
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    signalling.openUserMedia(_localRenderer, _remoteRenderer);
+                    setState(() {});
+                  },
+                  child: const Text("Open camera & microphone"),
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    roomId = await signalling.createRoom(_remoteRenderer);
+                    textEditingController.text = roomId!;
+                    setState(() {});
+                  },
+                  child: const Text("Create room"),
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Add roomId
+                    signalling.joinRoom(
+                      textEditingController.text.trim(),
+                      _remoteRenderer,
+                    );
+                    setState(() {});
+                  },
+                  child: const Text("Join room"),
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    signalling.hangUp(_localRenderer);
+                    setState(() {});
+                  },
+                  child: const Text("Hangup"),
+                )
+              ],
+            ),
           ),
           const SizedBox(height: 8),
           Expanded(
